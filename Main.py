@@ -14,3 +14,5 @@ if acc_timestamps[0] > gyro_timestamps[0]:
     start_reference = acc_timestamps[0]
 else:
     start_reference = gyro_timestamps[0]
+
+print(start_reference)
