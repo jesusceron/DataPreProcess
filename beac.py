@@ -27,6 +27,7 @@ gyrX = gyroscope_CSV['gyrX'].tolist()
 gyrY = gyroscope_CSV['gyrY'].tolist()
 gyrZ = gyroscope_CSV['gyrZ'].tolist()
 beacons_timestamps = beacons_CSV['Timestamp'].tolist()
+beacons_timestamps = beacons_CSV['RSSI'].tolist()
 beacons_TLM_packet = beacons_CSV['Estimote TLM packet'].tolist()
 
 # Declaring variables
@@ -46,7 +47,7 @@ target_aligned_accZ = []
 target_aligned_gyrX = []
 target_aligned_gyrY = []
 target_aligned_gyrZ = []
-target_sample_index = -1
+target_timestamp_index = -1
 last_difference = 0
 path = os.path.abspath(__file__)
 dir_path = os.path.dirname(path)
@@ -95,25 +96,25 @@ else:
     range_reference_size = len(timestamps_reference)
 
 for i in range(range_reference_size):
-    reference_sample = timestamps_reference[i]
-    reference_sample_index = i
-    for j in range(target_sample_index+1, len(timestamps_target)):
-        target_sample = timestamps_target[j]
+    reference_timestamp = timestamps_reference[i]
+    reference_timestamp_index = i
+    for j in range(target_timestamp_index+1, len(timestamps_target)):
+        target_timestamp = timestamps_target[j]
 
-        current_difference = reference_sample - target_sample
+        current_difference = reference_timestamp - target_timestamp
         if current_difference > 0:
             last_difference = current_difference
         else:
             if i == 0:
                 if abs(last_difference) > abs(current_difference):
                     target_sample_index = j
-                    appenddata(reference_sample_index, target_sample_index)
+                    appenddata(reference_timestamp_index, target_timestamp_index)
                 else:
                     target_sample_index = j - 1
-                    appenddata(reference_sample_index, target_sample_index)
+                    appenddata(reference_timestamp_index, target_timestamp_index)
             else:
                 target_sample_index = j
-                appenddata(reference_sample_index, target_sample_index)
+                appenddata(reference_timestamp_index, target_timestamp_index)
             break
 
 # Saving synchronized CSV files
@@ -150,3 +151,28 @@ else:
                             }
     df_acc = DataFrame(acc_CSV_synchronized, columns=['Timestamp', 'accX', 'accY', 'accZ'])
     df_acc.to_csv(dir_path + "\\dataset\\" + file_name + '_acc.csv', index=None, header=True)
+
+
+# Finding the closer timestamp from reference to target
+
+for i in range(0, len(beacons_timestamps)):
+    beacons_timestamp = beacons_timestamps[i]
+
+    for j in range(acc_sample_index+1, acc_CSV_synchronized):
+        target_sample = timestamps_target[j]
+
+        current_difference = reference_sample - target_sample
+        if current_difference > 0:
+            last_difference = current_difference
+        else:
+            if i == 0:
+                if abs(last_difference) > abs(current_difference):
+                    acc_sample_index = j
+                    appenddata(beacons_sample_index, acc_sample_index)
+                else:
+                    acc_sample_index = j - 1
+                    appenddata(beacons_sample_index, acc_sample_index)
+            else:
+                acc_sample_index = j
+                appenddata(beacons_sample_index, acc_sample_index)
+            break
