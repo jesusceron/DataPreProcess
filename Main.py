@@ -140,7 +140,7 @@ else:
 
 df_acc_gyr_sync = DataFrame(dict_acc_gyr)
 
-df_acc_gyr_sync.to_csv(dir_path + "\\dataset\\" + file_name + '_sync.csv', index=None, header=True)
+# df_acc_gyr_sync.to_csv(dir_path + "\\dataset\\" + file_name + '_sync.csv', index=None, header=True)
 
 # go to sync beacons data
 if df_acc_gyr_sync['Timestamp_Acc'][0] >= df_acc_gyr_sync['Timestamp_Gyr'][0]:
@@ -191,4 +191,4 @@ dict_acc_gyr_beac = {'Timestamp_Acc': target_aligned_timestamp_acc,
                      'TLM_packets_beacon_10': df_beac_sync['TLM_packets_beacon_10'].tolist()
                      }
 df_acc_gyr_beac_sync = DataFrame(dict_acc_gyr_beac)
-df_acc_gyr_beac_sync.to_csv(dir_path + "\\dataset\\" + file_name + '_beacons.csv', index=None, header=True)
+df_acc_gyr_beac_sync.to_csv(dir_path + "\\dataset\\" + file_name + '_sync.csv', index=None, header=True)
