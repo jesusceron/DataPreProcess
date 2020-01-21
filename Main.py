@@ -3,7 +3,6 @@ import pandas
 from beac import sync_beacons
 
 from pandas import DataFrame
-from shutil import copy
 
 file_name = '1'
 
@@ -118,37 +117,78 @@ for i in range(1, range_reference_size):
 # Saving synchronized CSV files
 # Code snippet to generate only one CSV file with data of acc and gyro
 if reference_file == "gyr":
-    CSV_synchronized = {'Timestamp_Acc': target_aligned_timestamp_acc,
-                        'Timestamp_Gyr': reference_aligned_timestamp_gyr,
-                        'accX': target_aligned_accX,
-                        'accY': target_aligned_accY,
-                        'accZ': target_aligned_accZ,
-                        'gyrX': reference_aligned_gyrX,
-                        'gyrY': reference_aligned_gyrY,
-                        'gyrZ': reference_aligned_gyrZ
-                        }
+    dict_acc_gyr = {'Timestamp_Acc': target_aligned_timestamp_acc,
+                    'Timestamp_Gyr': reference_aligned_timestamp_gyr,
+                    'accX': target_aligned_accX,
+                    'accY': target_aligned_accY,
+                    'accZ': target_aligned_accZ,
+                    'gyrX': reference_aligned_gyrX,
+                    'gyrY': reference_aligned_gyrY,
+                    'gyrZ': reference_aligned_gyrZ
+                    }
 
 else:
-    CSV_synchronized = {'Timestamp_Acc': reference_aligned_timestamp_acc,
-                        'Timestamp_Gyr': target_aligned_timestamp_gyr,
-                        'accX': reference_aligned_accX,
-                        'accY': reference_aligned_accY,
-                        'accZ': reference_aligned_accZ,
-                        'gyrX': target_aligned_gyrX,
-                        'gyrY': target_aligned_gyrY,
-                        'gyrZ': target_aligned_gyrZ
-                        }
+    dict_acc_gyr = {'Timestamp_Acc': reference_aligned_timestamp_acc,
+                    'Timestamp_Gyr': target_aligned_timestamp_gyr,
+                    'accX': reference_aligned_accX,
+                    'accY': reference_aligned_accY,
+                    'accZ': reference_aligned_accZ,
+                    'gyrX': target_aligned_gyrX,
+                    'gyrY': target_aligned_gyrY,
+                    'gyrZ': target_aligned_gyrZ
+                    }
 
-df_acc_gyr_sync = DataFrame(CSV_synchronized, columns=['Timestamp_Acc', 'Timestamp_Gyr',
-                                                       'accX', 'accY', 'accZ',
-                                                       'gyrX', 'gyrY', 'gyrZ'])
+df_acc_gyr_sync = DataFrame(dict_acc_gyr)
 
 df_acc_gyr_sync.to_csv(dir_path + "\\dataset\\" + file_name + '_sync.csv', index=None, header=True)
 
 # go to sync beacons data
 if df_acc_gyr_sync['Timestamp_Acc'][0] >= df_acc_gyr_sync['Timestamp_Gyr'][0]:
-    df_acc_gyr_beac_sync = (df_acc_gyr_sync['Timestamp_gyr'].tolist(), beacons_timestamps, beacons_RSSI, beacons_TLM_packet)
+    df_beac_sync = sync_beacons(df_acc_gyr_sync['Timestamp_Gyr'].tolist(), beacons_timestamps, beacons_RSSI,
+                                        beacons_TLM_packet)
 else:
-    df_acc_gyr_beac_sync = (df_acc_gyr_sync['Timestamp_acc'].tolist(), beacons_timestamps, beacons_RSSI, beacons_TLM_packet)
+    df_beac_sync = sync_beacons(df_acc_gyr_sync['Timestamp_Acc'].tolist(), beacons_timestamps, beacons_RSSI,
+                                        beacons_TLM_packet)
 
+dict_acc_gyr_beac = {'Timestamp_Acc': target_aligned_timestamp_acc,
+                     'Timestamp_Gyr': reference_aligned_timestamp_gyr,
+                     'Timestamps_ref': df_beac_sync['Timestamps_ref'].tolist(),
+                     'Timestamps_beacon_1': df_beac_sync['Timestamps_beacon_1'].tolist(),
+                     'Timestamps_beacon_2': df_beac_sync['Timestamps_beacon_2'].tolist(),
+                     'Timestamps_beacon_3': df_beac_sync['Timestamps_beacon_3'].tolist(),
+                     'Timestamps_beacon_4': df_beac_sync['Timestamps_beacon_4'].tolist(),
+                     'Timestamps_beacon_5': df_beac_sync['Timestamps_beacon_5'].tolist(),
+                     'Timestamps_beacon_6': df_beac_sync['Timestamps_beacon_6'].tolist(),
+                     'Timestamps_beacon_7': df_beac_sync['Timestamps_beacon_7'].tolist(),
+                     'Timestamps_beacon_8': df_beac_sync['Timestamps_beacon_8'].tolist(),
+                     'Timestamps_beacon_9': df_beac_sync['Timestamps_beacon_9'].tolist() ,
+                     'Timestamps_beacon_10': df_beac_sync['Timestamps_beacon_10'].tolist(),
+                     'accX': target_aligned_accX,
+                     'accY': target_aligned_accY,
+                     'accZ': target_aligned_accZ,
+                     'gyrX': reference_aligned_gyrX,
+                     'gyrY': reference_aligned_gyrY,
+                     'gyrZ': reference_aligned_gyrZ,
+                     'RSSIs_beacon_1': df_beac_sync['RSSIs_beacon_1'].tolist(),
+                     'RSSIs_beacon_2': df_beac_sync['RSSIs_beacon_2'].tolist(),
+                     'RSSIs_beacon_3': df_beac_sync['RSSIs_beacon_3'].tolist(),
+                     'RSSIs_beacon_4': df_beac_sync['RSSIs_beacon_4'].tolist(),
+                     'RSSIs_beacon_5': df_beac_sync['RSSIs_beacon_5'].tolist(),
+                     'RSSIs_beacon_6': df_beac_sync['RSSIs_beacon_6'].tolist(),
+                     'RSSIs_beacon_7': df_beac_sync['RSSIs_beacon_7'].tolist(),
+                     'RSSIs_beacon_8': df_beac_sync['RSSIs_beacon_8'].tolist(),
+                     'RSSIs_beacon_9': df_beac_sync['RSSIs_beacon_9'].tolist(),
+                     'RSSIs_beacon_10': df_beac_sync['RSSIs_beacon_10'].tolist(),
+                     'TLM_packets_beacon_1': df_beac_sync['TLM_packets_beacon_1'].tolist(),
+                     'TLM_packets_beacon_2': df_beac_sync['TLM_packets_beacon_2'].tolist(),
+                     'TLM_packets_beacon_3': df_beac_sync['TLM_packets_beacon_3'].tolist(),
+                     'TLM_packets_beacon_4': df_beac_sync['TLM_packets_beacon_4'].tolist(),
+                     'TLM_packets_beacon_5': df_beac_sync['TLM_packets_beacon_5'].tolist(),
+                     'TLM_packets_beacon_6': df_beac_sync['TLM_packets_beacon_6'].tolist(),
+                     'TLM_packets_beacon_7': df_beac_sync['TLM_packets_beacon_7'].tolist(),
+                     'TLM_packets_beacon_8': df_beac_sync['TLM_packets_beacon_8'].tolist(),
+                     'TLM_packets_beacon_9': df_beac_sync['TLM_packets_beacon_9'].tolist(),
+                     'TLM_packets_beacon_10': df_beac_sync['TLM_packets_beacon_10'].tolist()
+                     }
+df_acc_gyr_beac_sync = DataFrame(dict_acc_gyr_beac)
 df_acc_gyr_beac_sync.to_csv(dir_path + "\\dataset\\" + file_name + '_beacons.csv', index=None, header=True)
