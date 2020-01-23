@@ -168,13 +168,11 @@ def sync_beacons(reference_timestamps, beacons_timestamps, beacons_rssis, beacon
             else:
                 beacon_acc[acc_i] = (beacon_acc[acc_i] * 2 / 127.0) * 9.81
 
-
-
         # Byte 13-14. Beacon previous and current motion state duration
         # previous motion duration
         byte_13 = "{0:08b}".format(int(tlm_packet[26:28], 16))
-        byte_13_state = int(byte_13[0:2], 8)
-        byte_13_number = int(byte_13[2:8], 8)
+        byte_13_state = int(byte_13[0:2], 2)
+        byte_13_number = int(byte_13[2:8], 2)
 
         if byte_13_state == 0:
             # seconds
@@ -197,8 +195,8 @@ def sync_beacons(reference_timestamps, beacons_timestamps, beacons_rssis, beacon
 
         # current motion duration
         byte_14 = "{0:08b}".format(int(tlm_packet[28:30], 16))
-        byte_14_state = int(byte_14[0:2], 8)
-        byte_14_number = int(byte_14[2:8], 8)
+        byte_14_state = int(byte_14[0:2], 2)
+        byte_14_number = int(byte_14[2:8], 2)
 
         if byte_14_state == 0:
             # seconds
@@ -221,9 +219,9 @@ def sync_beacons(reference_timestamps, beacons_timestamps, beacons_rssis, beacon
 
         # Byte 15
         byte_15 = "{0:08b}".format(int(tlm_packet[30:32], 16))
-        clock_error = int(byte_15[4], 8)
-        firmware_error = int(byte_15[5], 8)
-        motion_state = int(byte_15[6:8], 8)
+        clock_error = int(byte_15[4], 2)
+        firmware_error = int(byte_15[5], 2)
+        motion_state = int(byte_15[6:8], 2)
 
         dict_tlm_packet_data = {'acc_x': beacon_acc[0], 'acc_y': beacon_acc[1],
                                 'acc_z': beacon_acc[2],
