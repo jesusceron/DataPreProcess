@@ -142,10 +142,33 @@ def sync_beacons(reference_timestamps, beacons_timestamps, beacons_rssis, beacon
 
     def get_tlm_packet_data(tlm_packet):
 
+        def twos_complement(num_binary):
+            # Inverting the bits one by one
+            num = ''
+            for binary_i in range(8):
+                if num_binary[binary_i] == '1':
+                    num += '0'
+                else:
+                    num += '1'
+
+            num = (int(num, 2) + 1) * -1
+
+            return num
+
         # Bytes 10-12. Beacon acceleration
-        beacon_acc_x = int(tlm_packet[20:22], 16) * 2 / 127.0
-        beacon_acc_y = int(tlm_packet[22:24], 16) * 2 / 127.0
-        beacon_acc_z = int(tlm_packet[24:26], 16) * 2 / 127.0
+        beacon_acc = [int(tlm_packet[20:22], 16), int(tlm_packet[22:24], 16), int(tlm_packet[24:26], 16)]
+
+        for acc_i in range(0, 3):
+            beacon_acc_binary = "{0:08b}".format(beacon_acc[acc_i])
+
+            if beacon_acc_binary[0] == '1':
+                beacon_acc[acc_i] = twos_complement(beacon_acc_binary)
+                # based on estimote rules (9.81 to pass from g to m/s2)
+                beacon_acc[acc_i] = (beacon_acc[acc_i] * 2 / 127.0) * 9.81
+            else:
+                beacon_acc[acc_i] = (beacon_acc[acc_i] * 2 / 127.0) * 9.81
+
+
 
         # Byte 13-14. Beacon previous and current motion state duration
         # previous motion duration
@@ -202,8 +225,8 @@ def sync_beacons(reference_timestamps, beacons_timestamps, beacons_rssis, beacon
         firmware_error = int(byte_15[5], 8)
         motion_state = int(byte_15[6:8], 8)
 
-        dict_tlm_packet_data = {'acc_x': beacon_acc_x, 'acc_y': beacon_acc_y,
-                                'acc_z': beacon_acc_z,
+        dict_tlm_packet_data = {'acc_x': beacon_acc[0], 'acc_y': beacon_acc[1],
+                                'acc_z': beacon_acc[2],
                                 'prev_motion_duration': prev_motion_duration,
                                 'current_motion_duration': current_motion_duration,
                                 'motion_state': motion_state,
@@ -375,7 +398,7 @@ def sync_beacons(reference_timestamps, beacons_timestamps, beacons_rssis, beacon
         10: beacon_10
     }
 
-    def appenddatabeacon(beac_id, beac_index, ref_index):
+    def append_data_beacon(beac_id, beac_index, ref_index):
         # Get the function from switcher dictionary
         func = switcher.get(beac_id, lambda: "Invalid beacon")
         # Execute the function
@@ -403,21 +426,22 @@ def sync_beacons(reference_timestamps, beacons_timestamps, beacons_rssis, beacon
                 if i == 0:
                     if abs(current_difference) < 200:
                         reference_timestamp_index = j
-                        appenddatabeacon(beacon_id, beacon_index, reference_timestamp_index)
+                        append_data_beacon(beacon_id, beacon_index, reference_timestamp_index)
                     else:
                         break
                 else:
                     if abs(last_difference) < abs(current_difference):
                         reference_timestamp_index = j - 1
-                        appenddatabeacon(beacon_id, beacon_index, reference_timestamp_index)
+                        append_data_beacon(beacon_id, beacon_index, reference_timestamp_index)
                     else:
                         reference_timestamp_index = j
-                        appenddatabeacon(beacon_id, beacon_index, reference_timestamp_index)
+                        append_data_beacon(beacon_id, beacon_index, reference_timestamp_index)
                 break
 
     beacons_dict = {'Timestamps_ref': reference_timestamps,
 
-                    'Timestamps_beacon_1': beacon_1_timestamps, 'RSSIs_beacon_1': beacon_1_rssis,
+                    'Timestamps_beacon_1': beacon_1_timestamps,
+                    'RSSIs_beacon_1': beacon_1_rssis,
                     'TLM_packets_beacon_1': beacon_1_tlm_packets,
                     'accX_beacon_1': beacon_1_acc_x,
                     'accY_beacon_1': beacon_1_acc_y,
@@ -428,7 +452,8 @@ def sync_beacons(reference_timestamps, beacons_timestamps, beacons_rssis, beacon
                     'clock_error_beacon_1': beacon_1_clock_error,
                     'firmware_error_beacon_1': beacon_1_firmware_error,
 
-                    'Timestamps_beacon_2': beacon_2_timestamps, 'RSSIs_beacon_2': beacon_2_rssis,
+                    'Timestamps_beacon_2': beacon_2_timestamps,
+                    'RSSIs_beacon_2': beacon_2_rssis,
                     'TLM_packets_beacon_2': beacon_2_tlm_packets,
                     'accX_beacon_2': beacon_2_acc_x,
                     'accY_beacon_2': beacon_2_acc_y,
@@ -439,7 +464,8 @@ def sync_beacons(reference_timestamps, beacons_timestamps, beacons_rssis, beacon
                     'clock_error_beacon_2': beacon_2_clock_error,
                     'firmware_error_beacon_2': beacon_2_firmware_error,
 
-                    'Timestamps_beacon_3': beacon_3_timestamps, 'RSSIs_beacon_3': beacon_3_rssis,
+                    'Timestamps_beacon_3': beacon_3_timestamps,
+                    'RSSIs_beacon_3': beacon_3_rssis,
                     'TLM_packets_beacon_3': beacon_3_tlm_packets,
                     'accX_beacon_3': beacon_3_acc_x,
                     'accY_beacon_3': beacon_3_acc_y,
@@ -450,7 +476,8 @@ def sync_beacons(reference_timestamps, beacons_timestamps, beacons_rssis, beacon
                     'clock_error_beacon_3': beacon_3_clock_error,
                     'firmware_error_beacon_3': beacon_3_firmware_error,
 
-                    'Timestamps_beacon_4': beacon_4_timestamps, 'RSSIs_beacon_4': beacon_4_rssis,
+                    'Timestamps_beacon_4': beacon_4_timestamps,
+                    'RSSIs_beacon_4': beacon_4_rssis,
                     'TLM_packets_beacon_4': beacon_4_tlm_packets,
                     'accX_beacon_4': beacon_4_acc_x,
                     'accY_beacon_4': beacon_4_acc_y,
@@ -461,7 +488,8 @@ def sync_beacons(reference_timestamps, beacons_timestamps, beacons_rssis, beacon
                     'clock_error_beacon_4': beacon_4_clock_error,
                     'firmware_error_beacon_4': beacon_4_firmware_error,
 
-                    'Timestamps_beacon_5': beacon_5_timestamps, 'RSSIs_beacon_5': beacon_5_rssis,
+                    'Timestamps_beacon_5': beacon_5_timestamps,
+                    'RSSIs_beacon_5': beacon_5_rssis,
                     'TLM_packets_beacon_5': beacon_5_tlm_packets,
                     'accX_beacon_5': beacon_5_acc_x,
                     'accY_beacon_5': beacon_5_acc_y,
@@ -472,7 +500,8 @@ def sync_beacons(reference_timestamps, beacons_timestamps, beacons_rssis, beacon
                     'clock_error_beacon_5': beacon_5_clock_error,
                     'firmware_error_beacon_5': beacon_5_firmware_error,
 
-                    'Timestamps_beacon_6': beacon_6_timestamps, 'RSSIs_beacon_6': beacon_6_rssis,
+                    'Timestamps_beacon_6': beacon_6_timestamps,
+                    'RSSIs_beacon_6': beacon_6_rssis,
                     'TLM_packets_beacon_6': beacon_6_tlm_packets,
                     'accX_beacon_6': beacon_6_acc_x,
                     'accY_beacon_6': beacon_6_acc_y,
@@ -483,7 +512,8 @@ def sync_beacons(reference_timestamps, beacons_timestamps, beacons_rssis, beacon
                     'clock_error_beacon_6': beacon_6_clock_error,
                     'firmware_error_beacon_6': beacon_6_firmware_error,
 
-                    'Timestamps_beacon_7': beacon_7_timestamps, 'RSSIs_beacon_7': beacon_7_rssis,
+                    'Timestamps_beacon_7': beacon_7_timestamps,
+                    'RSSIs_beacon_7': beacon_7_rssis,
                     'TLM_packets_beacon_7': beacon_7_tlm_packets,
                     'accX_beacon_7': beacon_7_acc_x,
                     'accY_beacon_7': beacon_7_acc_y,
@@ -494,7 +524,8 @@ def sync_beacons(reference_timestamps, beacons_timestamps, beacons_rssis, beacon
                     'clock_error_beacon_7': beacon_7_clock_error,
                     'firmware_error_beacon_7': beacon_7_firmware_error,
 
-                    'Timestamps_beacon_8': beacon_8_timestamps, 'RSSIs_beacon_8': beacon_8_rssis,
+                    'Timestamps_beacon_8': beacon_8_timestamps,
+                    'RSSIs_beacon_8': beacon_8_rssis,
                     'TLM_packets_beacon_8': beacon_8_tlm_packets,
                     'accX_beacon_8': beacon_8_acc_x,
                     'accY_beacon_8': beacon_8_acc_y,
@@ -505,7 +536,8 @@ def sync_beacons(reference_timestamps, beacons_timestamps, beacons_rssis, beacon
                     'clock_error_beacon_8': beacon_8_clock_error,
                     'firmware_error_beacon_8': beacon_8_firmware_error,
 
-                    'Timestamps_beacon_9': beacon_9_timestamps, 'RSSIs_beacon_9': beacon_9_rssis,
+                    'Timestamps_beacon_9': beacon_9_timestamps,
+                    'RSSIs_beacon_9': beacon_9_rssis,
                     'TLM_packets_beacon_9': beacon_9_tlm_packets,
                     'accX_beacon_9': beacon_9_acc_x,
                     'accY_beacon_9': beacon_9_acc_y,
@@ -516,7 +548,8 @@ def sync_beacons(reference_timestamps, beacons_timestamps, beacons_rssis, beacon
                     'clock_error_beacon_9': beacon_9_clock_error,
                     'firmware_error_beacon_9': beacon_9_firmware_error,
 
-                    'Timestamps_beacon_10': beacon_10_timestamps, 'RSSIs_beacon_10': beacon_10_rssis,
+                    'Timestamps_beacon_10': beacon_10_timestamps,
+                    'RSSIs_beacon_10': beacon_10_rssis,
                     'TLM_packets_beacon_10': beacon_10_tlm_packets,
                     'accX_beacon_10': beacon_10_acc_x,
                     'accY_beacon_10': beacon_10_acc_y,
