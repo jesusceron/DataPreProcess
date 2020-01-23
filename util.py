@@ -110,6 +110,7 @@ def min_max_acc_gyr():
 
 
 def get_tlm_packet_data(tlm_packet):
+
     def twos_complement(num_binary):
         # Inverting the bits one by one
         num = ''
