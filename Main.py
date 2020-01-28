@@ -396,4 +396,24 @@ dict_acc_gyr_beac.update({'RSSIs_beacon_1': df_beac_sync['RSSIs_beacon_1'].tolis
 
                           })
 df_acc_gyr_beac_sync = DataFrame(dict_acc_gyr_beac)
+
+# Drop samples of the initial second. File starts with the sample of the next second
+my_array = df_acc_gyr_beac_sync.values[0:205, 0]
+t_stamp_prev = str(my_array[0])
+t_stamp_prev = int(t_stamp_prev[-3:])
+if t_stamp_prev != 0:
+    i_drop = 0
+    for i in range(1, 205):
+        t_stamp_current = str(my_array[i])
+        t_stamp_current = int(t_stamp_current[-3:])
+        if t_stamp_current != 0:
+            dif = t_stamp_current - t_stamp_prev
+            if dif > 0:
+                i_drop += 1
+                t_stamp_prev = t_stamp_current
+                print(i_drop)
+            else:
+                break
+
+df_acc_gyr_beac_sync.drop(df_acc_gyr_beac_sync.index[0:i_drop+1], inplace=True)
 df_acc_gyr_beac_sync.to_csv(dir_path + "\\dataset\\" + file_name + '_acc_gyr_beac_sync.csv', index=None, header=True)
