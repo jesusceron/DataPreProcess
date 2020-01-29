@@ -16,7 +16,7 @@ def difference_acc_gyr_synchronized():
     plt.show()
 
 
-def min_max_acc_gyr():
+def min_max_acc_gyr_beacons_smartphone():
 
     accelerometer_CSV = pandas.read_csv('dataset/' + file_name + '_acc_raw.csv')
     accelerometer_CSV.sort_values(by='Timestamp', inplace=True)
@@ -112,6 +112,40 @@ def min_max_acc_gyr():
           ' \nsample index: ' + str(index_smallest_difference_beacons))
 
 
+def min_max_nilspod(f_name):
+
+    nilspod_csv = pandas.read_csv('dataset/' + f_name + '.csv')
+    #nilspod_csv.sort_values(by='Timestamp', inplace=True)
+    nilspod_timestamps = nilspod_csv['Timestamp'].tolist()
+    print("Lenght of NilsPod file: " + str(len(nilspod_timestamps)))
+
+    difference_btw_samples = []
+    biggest_difference = 0
+    smallest_difference = 10
+    index_biggest_difference = 0
+    index_smallest_difference = 0
+
+    for i in range(0, len(nilspod_timestamps) - 2):
+        difference = nilspod_timestamps[i + 1] - nilspod_timestamps[i]
+
+        if difference > biggest_difference:
+            biggest_difference_acc = difference
+            index_biggest_difference = i
+
+        if difference < smallest_difference:
+            smallest_difference_acc = difference
+            index_smallest_difference_acc = i
+
+        difference_btw_samples.append(difference)
+
+    difference_btw_samples.sort(reverse=True)
+    print('Biggest difference between NilsPod samples: ' + str(difference_btw_samples[0]) + "ms" +
+          ' \nsample index: ' + str(index_biggest_difference))
+    print('Smallest difference between NilsPod samples: ' + str(
+        difference_btw_samples[len(difference_btw_samples) - 1]) + "ms" +
+          ' \nsample index: ' + str(index_smallest_difference))
+
+
 def get_tlm_packet_data(tlm_packet):
 
     def twos_complement(num_binary):
@@ -143,5 +177,6 @@ def get_tlm_packet_data(tlm_packet):
 
 # Choose the function you want to run:
 #difference_acc_gyr_synchronized()
-min_max_acc_gyr()
+#min_max_acc_gyr_beacons_smartphone()
+min_max_nilspod('NilsPod-A8CE_20200127_1657_UPDATED')
 # get_tlm_packet_data("22f32a65edd388bbd400fcfe3e4182f1ffffffff") # get accelerometer data of the beacon
