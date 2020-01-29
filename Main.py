@@ -4,7 +4,7 @@ from beac import sync_beacons
 
 from pandas import DataFrame
 
-file_name = '5555'
+file_name = '1'
 
 # Reading CSV raw files
 accelerometer_CSV = pandas.read_csv('dataset/' + file_name + '_acc_raw.csv')
@@ -114,6 +114,7 @@ for j in range(target_timestamp_index + 1, len(timestamps_target)):
 
 # copy the remaining timestamps (from sample 1 to the end)
 for i in range(1, range_reference_size):
+    print(i)
     appenddata(i, i + target_timestamp_index)
 
 # Code snippet to generate only one CSV file with data of acc and gyro synchronized

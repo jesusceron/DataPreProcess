@@ -1,9 +1,9 @@
 import pandas
 import matplotlib.pyplot as plt
 
-
+file_name = '4'
 def difference_acc_gyr_synchronized():
-    file_name = '1'
+
     # File with Acc and Gyr timestamps synchronized
     acc_gyr_sync_CSV = pandas.read_csv('dataset/' + file_name + '_acc_gyr_sync.csv')
     acc_sync_timestamps = acc_gyr_sync_CSV['Timestamp_Acc'].tolist()
@@ -17,18 +17,21 @@ def difference_acc_gyr_synchronized():
 
 
 def min_max_acc_gyr():
-    file_name = '1'
+
     accelerometer_CSV = pandas.read_csv('dataset/' + file_name + '_acc_raw.csv')
     accelerometer_CSV.sort_values(by='Timestamp', inplace=True)
     acc_timestamps = accelerometer_CSV['Timestamp'].tolist()
+    print("Lenght of ACC file: " + str(len(acc_timestamps)))
 
     gyroscope_CSV = pandas.read_csv('dataset/' + file_name + '_gyr_raw.csv')
     gyroscope_CSV.sort_values(by='Timestamp', inplace=True)
     gyro_timestamps = gyroscope_CSV['Timestamp'].tolist()
+    print("Lenght of GYRO file: " + str(len(gyro_timestamps)))
 
     beacons_CSV = pandas.read_csv('dataset/' + file_name + '_beacons_raw.csv')
     beacons_CSV.sort_values(by='Timestamp', inplace=True)
     beacons_timestamps = beacons_CSV['Timestamp'].tolist()
+    print("Lenght of Beacons file: " + str(len(beacons_timestamps)))
 
     difference_btw_acc_samples = []
     biggest_difference_acc = 0
@@ -139,6 +142,6 @@ def get_tlm_packet_data(tlm_packet):
     print(beacon_acc)
 
 # Choose the function you want to run:
-# difference_acc_gyr_synchronized()
-# min_max_acc_gyr()
-get_tlm_packet_data("22f32a65edd388bbd400fcfe3e4182f1ffffffff") # get accelerometer data of the beacon
+#difference_acc_gyr_synchronized()
+min_max_acc_gyr()
+# get_tlm_packet_data("22f32a65edd388bbd400fcfe3e4182f1ffffffff") # get accelerometer data of the beacon
