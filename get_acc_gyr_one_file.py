@@ -4,30 +4,18 @@ from beac import sync_beacons
 
 from pandas import DataFrame
 
-file_name = '5555'
+file_name = 'test_for_KF_tuning'
 
 # Reading CSV raw files
-accelerometer_CSV = pandas.read_csv('dataset/' + file_name + '_acc_raw.csv')
-beacons_CSV = pandas.read_csv('dataset/' + file_name + '_beacons_raw.csv')
-gyroscope_CSV = pandas.read_csv('dataset/' + file_name + '_gyr_raw.csv')
-
-# Sorting DataFrames based on timestamp
-accelerometer_CSV.sort_values(by='Timestamp', inplace=True)  # inplace to keep the changes
-beacons_CSV.sort_values(by='Timestamp', inplace=True)
-gyroscope_CSV.sort_values(by='Timestamp', inplace=True)
+csv_file = pandas.read_csv(file_name + '.csv')
 
 # Getting columns as lists from DataFrames
-acc_timestamps = accelerometer_CSV['Timestamp'].tolist()
-accX = accelerometer_CSV['accX'].tolist()
-accY = accelerometer_CSV['accY'].tolist()
-accZ = accelerometer_CSV['accZ'].tolist()
-gyro_timestamps = gyroscope_CSV['Timestamp'].tolist()
-gyrX = gyroscope_CSV['gyrX'].tolist()
-gyrY = gyroscope_CSV['gyrY'].tolist()
-gyrZ = gyroscope_CSV['gyrZ'].tolist()
-beacons_timestamps = beacons_CSV['Timestamp'].tolist()
-beacons_RSSI = beacons_CSV['RSSI'].tolist()
-beacons_TLM_packet = beacons_CSV['Estimote TLM packet'].tolist()
+accX = csv_file['accX'].tolist()
+accY = csv_file['accY'].tolist()
+accZ = csv_file['accZ'].tolist()
+gyrX = csv_file['gyrX'].tolist()
+gyrY = csv_file['gyrY'].tolist()
+gyrZ = csv_file['gyrZ'].tolist()
 
 # Declaring variables
 reference_aligned_timestamp_acc = []

@@ -75,10 +75,10 @@ for i_file in range(0, 4):
 df_nilspod = DataFrame(dict_nilspods)
 df_nilspod.to_csv(dir_path + "\\dataset\\" + 'NilsPods_synchronized.csv', index=None, header=True)
 
-# Reading CSV raw files
+# Reading CSV beacons' raw files
 beacons_CSV = pandas.read_csv('dataset/' + participant_id + '_beacons_raw.csv')
 # Sorting DataFrames based on timestamp
-beacons_CSV.sort_values(by='Timestamp', inplace=True)  # inplace to keep the changes
+# beacons_CSV.sort_values(by='Timestamp', inplace=True)  # inplace to keep the changes
 # Getting columns as lists from DataFrames
 beacons_timestamps = beacons_CSV['Timestamp'].tolist()
 beacons_RSSI = beacons_CSV['RSSI'].tolist()

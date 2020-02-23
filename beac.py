@@ -1,6 +1,7 @@
 # def to synchronize beacons data with the already synchronized acc and gyro data
 from pandas import DataFrame
 
+
 def sync_beacons(reference_timestamps, beacons_timestamps, beacons_rssis, beacons_tlm_packets):
     beacons_id_dict = {'46846e6187678448': 1,  # Coconut
                        '7897b2192cd1330e': 2,  # Mint
@@ -555,5 +556,5 @@ def sync_beacons(reference_timestamps, beacons_timestamps, beacons_rssis, beacon
                     'clock_error_beacon_10': beacon_10_clock_error,
                     'firmware_error_beacon_10': beacon_10_firmware_error
                     }
-    #df_beac_sync = DataFrame(beacons_dict)
+    # df_beac_sync = DataFrame(beacons_dict)
     return beacons_dict
