@@ -9,15 +9,15 @@ dir_path = os.path.dirname(path)
 
 #  Before running this script, remember cut the files in order to get the same number of rows
 #  DO NOT forget enter these data :
-file_names = ['NilsPod-A8CE_20200127_1657',  # Right wrist (Master NilsPod)
-              'NilsPod-C6AA_20200127_1657',  # Left wrist
-              'NilsPodX-EB9E_20200127_1657',  # Right foot
-              'NilsPodX-9FBB_20200127_1657']  # Left foot
+file_names = ['NilsPod-A8CE_20200308_1734',  # Right wrist (Master NilsPod)
+              'NilsPod-C6AA_20200308_1734',  # Left wrist
+              'NilsPodX-EB9E_20200308_1734',  # Right foot
+              'NilsPodX-9FBB_20200308_1734']  # Left foot
 # To use timestamps from master NilsPod as reference time
-initial_timestamp = 1580140627000  # Add 3 zeros at the end of the utc_start and utc_stop number
-final_timestamp = 1580141123000
+initial_timestamp = 1583685272000  # Add 3 zeros at the end of the utc_start and utc_stop number
+final_timestamp = 1583685322000
 # Participant ID
-participant_id = '5555'
+participant_id = '8080'
 
 for i_file in range(0, 4):
     # Reading CSV raw files
@@ -82,9 +82,9 @@ beacons_CSV = pandas.read_csv('dataset/' + participant_id + '_beacons_raw.csv')
 # Getting columns as lists from DataFrames
 beacons_timestamps = beacons_CSV['Timestamp'].tolist()
 beacons_RSSI = beacons_CSV['RSSI'].tolist()
-beacons_TLM_packet = beacons_CSV['Estimote TLM packet'].tolist()
+beacons_service_packet = beacons_CSV['Estimote TLM packet'].tolist()
 
-dict_beac_sync = sync_beacons(timestamps, beacons_timestamps, beacons_RSSI, beacons_TLM_packet)
+dict_beac_sync = sync_beacons(timestamps, beacons_timestamps, beacons_RSSI, beacons_service_packet)
 dict_nilspods.update(dict_beac_sync)
 df_nilspod = DataFrame(dict_nilspods)
 df_nilspod.to_csv(dir_path + "\\dataset\\" + 'NilsPods_beacons_synchronized.csv', index=None, header=True)

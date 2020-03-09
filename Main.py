@@ -4,7 +4,7 @@ from beac import sync_beacons
 
 from pandas import DataFrame
 
-file_name = '5555'
+file_name = '8080'
 
 # Reading CSV raw files
 accelerometer_CSV = pandas.read_csv('dataset/' + file_name + '_acc_raw.csv')
@@ -27,7 +27,7 @@ gyrY = gyroscope_CSV['gyrY'].tolist()
 gyrZ = gyroscope_CSV['gyrZ'].tolist()
 beacons_timestamps = beacons_CSV['Timestamp'].tolist()
 beacons_RSSI = beacons_CSV['RSSI'].tolist()
-beacons_TLM_packet = beacons_CSV['Estimote TLM packet'].tolist()
+beacons_TLM_packet = beacons_CSV['Data packet'].tolist()
 
 # Declaring variables
 reference_aligned_timestamp_acc = []
