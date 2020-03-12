@@ -7,17 +7,23 @@ from pandas import DataFrame
 path = os.path.abspath(__file__)
 dir_path = os.path.dirname(path)
 
+# THIS IS THE MAIN FILE OF THE PROJECT.
+# For each participant, put the four NilsPod's and the 'raw_beacons' files in the dataset named 'Dataset'
+# This scprit will synchronize those files according their Timestamps
+
 #  Before running this script, remember cut the files in order to get the same number of rows
 #  DO NOT forget enter these data :
-file_names = ['NilsPod-A8CE_20200308_1734',  # Right wrist (Master NilsPod)
-              'NilsPod-C6AA_20200308_1734',  # Left wrist
-              'NilsPodX-EB9E_20200308_1734',  # Right foot
-              'NilsPodX-9FBB_20200308_1734']  # Left foot
-# To use timestamps from master NilsPod as reference time
-initial_timestamp = 1583685272000  # Add 3 zeros at the end of the utc_start and utc_stop number
-final_timestamp = 1583685322000
 # Participant ID
-participant_id = '8080'
+participant_id = '11'
+# To use timestamps from master NilsPod as reference time
+initial_timestamp = 1583859651000  # Add 3 zeros at the end of the utc_start and utc_stop number
+final_timestamp = 1583860000000
+
+
+file_names = [participant_id+'_right_wrist',  # Right wrist (Master NilsPod)
+              participant_id+'_left_wrist',  # Left wrist
+              participant_id+'_right_foot',  # Right foot
+              participant_id+'_left_foot']  # Left foot
 
 for i_file in range(0, 4):
     # Reading CSV raw files
