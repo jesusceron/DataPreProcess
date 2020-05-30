@@ -14,10 +14,10 @@ dir_path = os.path.dirname(path)
 #  Before running this script, remember cut the files in order to get the same number of rows
 #  DO NOT forget enter these data :
 # Participant ID
-participant_id = '11'
-# To use timestamps from master NilsPod as reference time
-initial_timestamp = 1583859651000  # Add 3 zeros at the end of the utc_start and utc_stop number
-final_timestamp = 1583860000000
+participant_id = '10'
+# Use timestamps from master NilsPod as reference time
+initial_timestamp = 1583857065000  # Add 3 zeros at the end of the utc_start and utc_stop number
+final_timestamp = 1583857414000
 
 
 file_names = [participant_id+'_right_wrist',  # Right wrist (Master NilsPod)
