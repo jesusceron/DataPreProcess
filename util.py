@@ -149,7 +149,7 @@ def min_max_nilspod(f_name):
 def get_tlm_packet_data(tlm_packet):
 
     def twos_complement(num_binary):
-        # Inverting the bits one by one
+        # To invert the bits one by one
         num = ''
         for i in range(8):
             if num_binary[i] == '1':
