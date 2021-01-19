@@ -9,9 +9,9 @@ dir_path = os.path.dirname(path)
 
 # THIS IS THE MAIN FILE OF THE PROJECT.
 # For each participant, put the four NilsPod's and the 'raw_beacons' files in the dataset named 'Dataset'
-# This scprit will synchronize those files according their Timestamps
+# This scprit will synchronize those files according to their Timestamps
 
-#  Before running this script, remember cut the files in order to get the same number of rows
+#  Before running this script, remember to cut the files in order to get the same number of rows
 #  DO NOT forget enter these data :
 # Participant ID
 participant_id = '10'
