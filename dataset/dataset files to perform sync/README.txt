@@ -1,1 +1,0 @@
-With these files are obtained the synchronized CSVs. These files are the input in the DataPreProcess app in PyCharm (Sync_NilsPods_Beacons.py)
